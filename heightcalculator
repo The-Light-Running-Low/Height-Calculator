@@ -1,0 +1,42 @@
+        npm init -y
+        npm install @actions/core @actions/github
+        const core = require('@actions/core');
+        const github = require('@actions/github');
+
+        try {
+          const nameToGreet = core.getInput('name');
+          console.log(`Hello ${nameToGreet}!`);
+          const time = (new Date()).toTimeString();
+          core.setOutput("time", time);
+          // Get the JSON webhook payload for the event that triggered the workflow
+          const payload = JSON.stringify(github.context.payload, undefined, 2)
+          console.log(`The event payload: ${payload}`);
+        } catch (error) {
+          core.setFailed(error.message);
+        }
+        name: 'My JavaScript Action'
+        description: 'A simple JavaScript action'
+        inputs:
+          name:
+            description: 'Name to greet'
+            required: true
+            default: 'World'
+        outputs:
+          time:
+            description: 'The time we greeted you'
+        runs:
+          using: 'node16' # Or 'node20'
+          main: 'index.js'
+        name: Test My Action
+
+        on: [push]
+
+        jobs:
+          build:
+            runs-on: ubuntu-latest
+            steps:
+            - uses: actions/checkout@v4
+            - name: Run my action
+              uses: ./ # Refers to the action in the current repository
+              with:
+                name: 'GitHub User'
