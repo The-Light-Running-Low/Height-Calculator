@@ -1,42 +1,20 @@
-        npm init -y
-        npm install @actions/core @actions/github
-        const core = require('@actions/core');
-        const github = require('@actions/github');
+javascript:(function() {
+  var metric = 0;
+  var imperial = 0;
+  var unit = prompt("1 for metric, 2 for imperial", "america or earth");
+  var input = prompt("Please enter height in " + unit, "Enter height here");
+  if (unit == 1) {
+    metric = Number(input);
+    imperial = metric * 0.3937007874;
+  } else {   
+    imperial = Number(input);
+    metric = imperial * 2.54;
+  }
 
-        try {
-          const nameToGreet = core.getInput('name');
-          console.log(`Hello ${nameToGreet}!`);
-          const time = (new Date()).toTimeString();
-          core.setOutput("time", time);
-          // Get the JSON webhook payload for the event that triggered the workflow
-          const payload = JSON.stringify(github.context.payload, undefined, 2)
-          console.log(`The event payload: ${payload}`);
-        } catch (error) {
-          core.setFailed(error.message);
-        }
-        name: 'My JavaScript Action'
-        description: 'A simple JavaScript action'
-        inputs:
-          name:
-            description: 'Name to greet'
-            required: true
-            default: 'World'
-        outputs:
-          time:
-            description: 'The time we greeted you'
-        runs:
-          using: 'node16' # Or 'node20'
-          main: 'index.js'
-        name: Test My Action
-
-        on: [push]
-
-        jobs:
-          build:
-            runs-on: ubuntu-latest
-            steps:
-            - uses: actions/checkout@v4
-            - name: Run my action
-              uses: ./ # Refers to the action in the current repository
-              with:
-                name: 'GitHub User'
+  if (metric !== null) {
+    var output = "You are: " + metric + " cm, or " + imperial + " in";
+    alert(output);
+  } else {
+    alert("Here’s a secret: this is actually a converter.");
+  }
+})();
